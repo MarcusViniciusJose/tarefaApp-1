@@ -5,9 +5,6 @@ import {FormBuilder, FormGroup, Validators, Form} from '@angular/forms';
 import { Router } from '@angular/router';
 import { CpfValidator } from '../validators/cpf-validator';
 import { ComparacaoValidator } from '../validators/comparacao-validator';
-import { AlertController } from '@ionic/angular';
-import { Usuario } from '../models/Usuarios';
-import { UsuarioService } from '../services/usuario.service';
 @Component({
   selector: 'app-registro',
   templateUrl: './registro.page.html',
@@ -57,15 +54,10 @@ export class RegistroPage implements OnInit {
       {tipo: 'comparacao', mensagem: 'Deve ser igual a senha!'}
     
     ],
-   };
- 
+   }
    
   
-   constructor(
-     private formBuilder: FormBuilder,
-     private usuarioService: UsuarioService,
-     private router: Router,
-     public alertController: AlertController) { 
+   constructor(private formBuilder: FormBuilder, private router: Router) { 
      this.formRegistro = formBuilder.group({
        email: ['', Validators.compose([Validators.required, Validators.email])],
        senha: ['', Validators.compose([Validators.required, Validators.minLength(6)])],
@@ -76,56 +68,18 @@ export class RegistroPage implements OnInit {
        celular: ['', Validators.compose([Validators.required, Validators.maxLength(13)])], 
        confirmar: ['', Validators.compose([Validators.required, Validators.minLength(6) ])],
         },
-
         {
           validator: ComparacaoValidator('senha', 'confirmar')
         });
    }
    
      
-   async ngOnInit() {
-    await this.usuarioService.buscarTodos();
-    console.log(this.usuarioService.listarUsuarios);
- }
-
- public async salvarFormulario(){
-   if(this.formRegistro.valid){
-
-     let usuario = new Usuario();
-     usuario.nome = this.formRegistro.value.nome;
-     usuario.cpf = this.formRegistro.value.cpf;
-     usuario.dataNascimento = new Date(this.formRegistro.value.dataNascimento);
-     usuario.genero = this.formRegistro.value.genero;
-     usuario.celular = this.formRegistro.value.celular;
-     usuario.email = this.formRegistro.value.email;
-     usuario.senha = this.formRegistro.value.senha;
-
-
-     if(await this.usuarioService.salvar(usuario)){
-       this.exibirAlerta('SUCESSO!', 'Usuario salvo com sucesso');
-       this.router.navigateByUrl('/login');
-     }else{
-       this.exibirAlerta('ERRO', 'Usuário salvo com ');
-     }
-   }else{
-     this.exibirAlerta('ADVERTENCIA!', 'Formulário inválido<br/>Verefique os campos do seu formulário');
-   }
- }
-
- async exibirAlerta(titulo: string, mensagem: string) {
-   const alert = await this.alertController.create({
-     header: titulo,
-     message: mensagem,
-     buttons: ['OK']
-   });
-
-   await alert.present();
- }
+   
  
   
 
-  
-
+  ngOnInit() {
+  }
   public registrar(){
     if(this.formRegistro.valid){
         console.log('formulário válido!');
