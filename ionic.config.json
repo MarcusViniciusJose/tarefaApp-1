@@ -1,5 +1,7 @@
 {
   "name": "tarefaApp",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }
