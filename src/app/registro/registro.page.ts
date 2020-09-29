@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-
-
 import {FormBuilder, FormGroup, Validators, Form} from '@angular/forms';
 import { Router } from '@angular/router';
 import { CpfValidator } from '../validators/cpf-validator';
@@ -92,7 +90,7 @@ export class RegistroPage implements OnInit {
    if(this.formRegistro.valid){
 
      let usuario = new Usuario();
-     usuario.nome = this.formRegistro.value.nome;
+     usuario.nome= this.formRegistro.value.nome;
      usuario.cpf = this.formRegistro.value.cpf;
      usuario.dataNascimento = new Date(this.formRegistro.value.dataNascimento);
      usuario.genero = this.formRegistro.value.genero;

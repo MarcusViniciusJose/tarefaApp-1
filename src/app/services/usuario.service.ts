@@ -31,5 +31,52 @@ export class UsuarioService {
 
     return await this.armazenamentoService.salvarDados('usuarios',this.listarUsuarios);
   }
- }
 
+  public async login(email: string, senha:string){
+    let usuario: Usuario;
+
+    await this.buscarTodos();
+
+    const listaTemporaria = this.listarUsuarios.filter(usuarioArmazenamento => {
+      return(usuarioArmazenamento.email == email && usuarioArmazenamento.senha == senha);
+    });
+    if(listaTemporaria.length > 0){
+      usuario = listaTemporaria.reduce(item => item);
+    }
+
+    return usuario;
+  }
+ 
+  public salvarUsuarioLogado(usuario: Usuario){
+    delete usuario.senha;
+    this.armazenamentoService.salvarDados('usuarioLogado', usuario);
+  }
+
+  public async buscarUsuarioLogado(){
+    return await this.armazenamentoService.pegarDados('usuarioLogado');
+  }
+
+  public async removerUsuarioLogado(){
+    return await this.armazenamentoService.removerDados('usuarioLogado');
+  }
+
+  public async alterar(usuario: Usuario){
+    if(!usuario){
+      return false;
+    }
+
+    await this.buscarTodos();
+
+    const index =  this.listarUsuarios.findIndex(usuarioArmazenado =>{
+      return usuarioArmazenado.email == usuario.email;
+    });
+
+    const usuarioTemporario = this.listarUsuarios[index] as Usuario;
+    
+    usuario.senha = usuarioTemporario.senha;
+
+    this.listarUsuarios[index] = usuario;
+
+    return await this.armazenamentoService.salvarDados('usuarios', this.listarUsuarios);
+  }
+}
